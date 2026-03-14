@@ -46,12 +46,45 @@
  */
 export function createDialogueWriter(genre) {
   // Your code here
+  const genreDialogs = {
+    action: (hero, villain) => `${hero} says: 'Tujhe toh main dekh lunga, ${villain}!'`,
+    romance: (hero, villain) => `${hero} whispers: '${villain}, tum mere liye sab kuch ho'`,
+    comedy: (hero, villain) => `${hero} laughs: '${villain} bhai, kya kar rahe ho yaar!'`,
+    drama: (hero, villain) => `${hero} cries: '${villain}, tune mera sab kuch cheen liya!'`
+  }
+  if (!genreDialogs[genre]) return null;
+  return (hero, villian) => {
+    if (!hero || !villian || !hero.trim() || !villian.trim()
+    ) return "..."
+    return genreDialogs[genre](hero, villian);
+  }
 }
 
 export function createTicketPricer(basePrice) {
   // Your code here
+  if (basePrice <= 0) return null;
+  const multipliers = {
+    silver: 1,
+    gold: 1.5,
+    platinum: 2
+  }
+  return (seatType, isWeekend) => {
+    let baseWithM = multipliers[seatType] * basePrice;
+    if (!baseWithM) return null;
+    if (isWeekend) baseWithM = baseWithM * 1.3;
+    return Math.round(baseWithM);
+  }
 }
 
 export function createRatingCalculator(weights) {
   // Your code here
+  if (!weights || typeof weights !== 'object') return null;
+
+  return (scores) => {
+    const result = Object.keys(weights)
+      .map((x) => scores[x] * weights[x])
+      .reduce((acc, item) => acc + item, 0);
+
+    return parseFloat(result.toFixed(1));
+  };
 }
